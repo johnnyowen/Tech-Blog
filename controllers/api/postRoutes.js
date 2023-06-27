@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json(error); // 500 - internal server error
-    }
+    };
 })
 
 /***** READ - optional ******/
@@ -46,14 +46,14 @@ router.get('/', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json(error); // 500 - internal server error 
-    }
+    };
 });
 
 // Route to read one post by id
 // POST method with endpoint '/api/posts/:postId'
 router.get('/:postId', async (req, res) => {
     try {
-        const posts = await Post.findByPk(req.params.postId, {
+        const post = await Post.findByPk(req.params.postId, {
             include: [
                 { model: User, attributes: ['username'] }, 
                 { model: Comment, include: { model: User, attributes: ['username'] } }
@@ -68,11 +68,11 @@ router.get('/:postId', async (req, res) => {
                 ]
             }
         });
-        res.status(200).json(posts);
+        res.status(200).json(post);
     } catch (error) {
         console.log(error);
         res.status(500).json(error); // 500 - internal server error 
-    }
+    };
 });
 
 /***** UPDATE ******/
@@ -97,7 +97,7 @@ router.put('/:postId', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json(error); // 500 - internal server error 
-    }
+    };
 });
 
 /***** DELETE ******/
@@ -120,7 +120,7 @@ router.delete('/:postId', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json(error); // 500 - internal server error 
-    }
+    };
 });
 
 module.exports = router;

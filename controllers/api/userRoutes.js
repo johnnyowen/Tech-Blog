@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json(error); // 500 - internal server error
-    }
+    };
 });
 
 /***** READ - optional ******/
@@ -88,8 +88,8 @@ router.get('/:userId', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json(error); // 500 - internal server error
-    }
-})
+    };
+});
 
 /***** UPDATE - optional ******/
 
@@ -111,7 +111,7 @@ router.put('/:userId', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json(error); // 500 - internal server error
-    } 
+    };
 });
 
 /***** DELETE - optional ******/
@@ -132,7 +132,7 @@ router.delete('/:userId', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json(error); // 500 - internal server error
-    }
+    };
 });
 
 // TODO: add login route
