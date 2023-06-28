@@ -5,13 +5,13 @@ const {Post, User, Comment} = require('../../models');
 // Render dashboard with all posts ever created by the user logged in
 // Endpoint is '/dashboard/:userId'
 // TODO: only authenticated users can access their dashboard
-// TODO: Once we set up sessions, remove ':userId' from endpoint and get userId from req.sessions
-router.get('/:userId', async (req, res) => {
+// DONE: Once we set up sessions, remove ':userId' from endpoint and get userId from req.sessions
+router.get('/', async (req, res) => {
     try {
         const posts = await Post.findAll({
             where: {
-                // TODO: get user id from req.sessions
-                userId: req.params.userId
+                // DONE: get user id from req.sessions
+                userId: req.session.userId
             },
             include: [{ model: User, attributes: ['username'] }],
             attributes: {
@@ -31,6 +31,11 @@ router.get('/:userId', async (req, res) => {
         console.log(error);
         res.status(500).json(error);
     };
+});
+
+// New Post Route
+router.get('/new', (req, res) => {
+    res.render('newPostHandlebarsPage', {layout: dashboard});
 });
 
 // Render dashboard view for a single poat created by the user logged in
