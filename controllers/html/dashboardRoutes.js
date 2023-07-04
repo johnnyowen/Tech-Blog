@@ -1,17 +1,15 @@
 const router = require('express').Router();
 const sequelize = require('../../config/connection');
 const {Post, User, Comment} = require('../../models');
+const withAuth = require('../../utils/auth');
 
 // Render dashboard with all posts ever created by the user logged in
 // Endpoint is '/dashboard/:userId'
-// TODO: only authenticated users can access their dashboard
-// DONE: Once we set up sessions, remove ':userId' from endpoint and get userId from req.sessions
-router.get('/', async (req, res) => {
+router.get('/:userId', async (req, res) => {
     try {
         const posts = await Post.findAll({
             where: {
-                // DONE: get user id from req.sessions
-                userId: req.session.userId
+                userId: req.params.userId
             },
             include: [{ model: User, attributes: ['username'] }],
             attributes: {
@@ -24,9 +22,11 @@ router.get('/', async (req, res) => {
                 ]
             }
         });
-        const serializedPosts = posts.map(post => post.get({ plain:true }))
-        // TODO: modify response with actual VIEW
-        res.status(200).send('<h1>DASHBOARD</h1><h2>Render the dashboard view along with all posts from logged in user.</h2>');
+        const serializedPosts = posts.map(post => post.get({ plain:true }));
+        res.status(200).render('dashboard', {
+            serializedPosts,
+            loggedIn: req.session.loggedIn
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json(error);
@@ -34,18 +34,18 @@ router.get('/', async (req, res) => {
 });
 
 // New Post Route
+// Endpoint is '/dashboard/new'
 router.get('/new', (req, res) => {
-    res.render('newPostHandlebarsPage', {layout: dashboard});
+    res.render('newPost');
 });
 
-// Render dashboard view for a single poat created by the user logged in
+// Render dashboard view for a single post created by the user logged in
 // Endpoint is '/dashboard/post/:id'
 router.get('/post/:id', async (req, res) => {
     try {
         let post = await Post.findOne({
             where: {
-                id: req.params.id
-                // TODO: might need to verify that post belomgs to user attempting to view it(userId will come from req.sessions.userId)
+                id: req.params.id,
             },
             include: [{ model: Comment, include: { model: User, attributes: ['username'] } }],
             attributes: {
@@ -60,12 +60,47 @@ router.get('/post/:id', async (req, res) => {
         });
         if (!post) return res.status(404).json({ message: 'No post found.' });
         post = post.get({ plain: true });
-        // TODO: modify response with actual VIEW
-        res.status(200).send('<h1>DASHBOARD</h1><h2>Render the dashboard view for a single post along with that post retrieved from the database.</h2>');
+        res.status(200).render('singlePost', {
+            ...post, 
+            loggedIn: req.session.loggedIn
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json(error);
     };
 });
+
+// Render dashboard view for a single post created by the user logged in
+// Endpoint is '/dashboard/post/edit/:id'
+router.get('/post/edit/:id', async (req, res) => {
+    try {
+        let post = await Post.findOne({
+            where: {
+                id: req.params.id,
+            },
+            include: [{ model: Comment, include: { model: User, attributes: ['username'] } }],
+            attributes: {
+                include: [
+                    // use plain SQL to retrieve number of comments
+                    [
+                        sequelize.literal('(SELECT COUNT (*) FROM comment WHERE comment.postId - post.id)'),
+                        'commentsCount'
+                    ]
+                ]
+            }
+        });
+        if (!post) return res.status(404).json({ message: 'No post found.' });
+        post = post.get({ plain: true });
+        res.status(200).render('editPost', {
+            ...post, 
+            loggedIn: req.session.loggedIn
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    };
+});
+
+
 
 module.exports = router;

@@ -18,10 +18,10 @@ router.get('/', async (req, res) => {
             }
         });
         const serializedPosts = posts.map(post => post.get({ plain:true }))
-        // TODO: modify response with actual VIEW
-        res.status(200)
-            // .send('<h1>HOMEPAGE</h1><h2>Render the homepage view along with all posts retrieved.</h2>')
-            .render('homepage');
+        res.status(200).render('homepage', {
+            serializedPosts,
+            loggedIn: req.session.loggedIn
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json(error);
@@ -49,26 +49,20 @@ router.get('/post/:id', async (req, res) => {
         if (!post) return res.status(404).json({ message: 'No post found.' });
         post = post.get({ plain:true });
         console.log(post);
-        // TODO: modify response with actual VIEW
-        res.status(200).send('<h1>SINGLE POST PAGE</h1><h2>Render the single post view along with the post retrieved.</h2>');
+        res.status(200).render('singlePost', {
+            ...post, 
+            loggedIn: req.session.loggedIn
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json(error);
     };
 });
 
-// Render signup page 
-router.get('/signup', async (req, res) => {
-    // TODO: redirect to dashboard if user is already logged in
-    // TODO: modify response with actual VIEW|template
-    res.status(200).send('<h1>SIGNUP PAGE</h1><h2>Render the signup view.</h2>');
-});
-
-// Render login page 
-router.get('/login', async (req, res) => {
-    // TODO: redirect to dashboard if user is already logged in
-    // TODO: modify response with actual VIEW|template
-    res.status(200).send('<h1>LOGIN PAGE</h1><h2>Render the login view.</h2>');
+// Render signup/login page 
+router.get('/signupLogin', async (req, res) => {
+    if (req.session.loggedIn) return res.redirect('/dashboard');
+    res.status(200).render('signupLogin');
 });
 
 module.exports = router;

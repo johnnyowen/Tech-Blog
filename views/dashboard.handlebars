@@ -1,0 +1,18 @@
+{{!-- all users posts and option to create post --}}
+
+<div>
+    <input type="text" id="blog-title" name="blog-title" placeholder="Blog Title" />
+    <textarea id="blog-desc" name="blog-desc" placeholder="Blog Content"></textarea>
+    <button type="submit">Create</button>
+</div>
+
+{{#each serializedPosts as |post|}}
+<div>
+    <p>{{post.title}}</p>
+    <p>{{post.text}}</p>
+    <p>{{post.createdAt}}</p>
+    <p>{{post.commentsCount}}</p>
+</div>
+{{/each}}
+
+<script src="/public/js/dashboard.js"></script>

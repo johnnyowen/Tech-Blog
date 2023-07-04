@@ -1,21 +1,20 @@
 const router = require('express').Router();
 // import our db connection for the SQL literals
-// const sequelize = require('sequelize');
+const sequelize = require('sequelize');
 const {Post, User, Comment} = require('../../models');
+const withAuth = require('../../utils/auth');
 
 /***** CREATE ******/
 
 // Route to create a new comment
 // POST method with endpoint '/api/comments/'
-// test with: {"text": "This is the text for a new comment", "userId": 12, "postId": 23}
-// TODO: Only authenticated users can comment
-router.post('/', async (req, res) => {
+// test with: {"text": "This is the text for a new comment", "postId": 20}
+router.post('/', withAuth, async (req, res) => {
     try {
         const newComment = await Comment.create({
             text: req.body.text,
             postId: req.body.postId,
-            // TODO: the userId will come from req.session once we have set up our sessions
-            userId: req.body.userId
+            userId: req.session.userId
         });
         res.status(201).json(newComment);
     } catch (error) {
@@ -65,13 +64,13 @@ router.get('/:commentId', async (req, res) => {
 // Route to update a comment by id
 // POST method with endpoint '/api/comments/:commentId'
 // test with: {"text": "This is the UPDATED text for an existing comment"}
-// TODO: Only admin or authenticated users can update their comment
-router.put('/:commentId', async (req, res) => {
+// TODO: admin can update their comment
+router.put('/:commentId', withAuth, async (req, res) => {
     try {
         const updatedComment = await Comment.update(req.body, {
             where: {
-                id: req.params.commentId
-                // TODO: verify that comment belongs to user attempting to update it (userId will come from req.session once we set up our sessions)
+                id: req.params.commentId,
+                userId: req.session.userId
             }
         });
         if (!updatedComment[0]) return res.status(406).json({ message: 'This request cannot be completed.' });
@@ -87,12 +86,12 @@ router.put('/:commentId', async (req, res) => {
 // Route to DELETE one comment by id
 // GET method with endpoint '/api/comments/:commentId'
 // TODO: Only admin or authenticated users can delete their comment
-router.delete('/:commentId', async (req, res) => {
+router.delete('/:commentId', withAuth, async (req, res) => {
     try {
         const deletedComment = await Comment.destroy({
             where: {
-                id: req.params.commentId
-                // TODO: verify that comment belongs to user attempting to update it (userId will come from req.session once we set up our sessions)
+                id: req.params.commentId,
+                userId: req.session.userId
             }
         });
         if (!deletedComment) return res.status(406).json({ message: 'This request cannot be completed.' });

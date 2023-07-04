@@ -22,18 +22,28 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const routes = require('./controllers');
 app.use(express.static(path.join(__dirname, 'public')));
 
-// finish setting up session
+// configure session object
 const sess = {
+    // secret is used to sign cookies
     secret: process.env.DB_SECRET,
+    // cookie options
     cookie: {
-      maxAge: 10 * 60 * 1000, // expires after 10 minutes
+      maxAge: 60 * 60 * 1000, // expires after 1 hour
+      // only store session cookies when protocol used by client to connect to server is HTTP
+      httpOnly: true, 
+      secure: false,
     },
+    // resave session to store even if session is not modified during request-response cycle
     resave: false,
-    saveUninitialized: true,
+    // save uninitialized session to store (uninitialized means new but not modified)
+    saveUninitialized: false,
+    // set-up session store
     store: new SequelizeStore({
       db: sequelize,
     }),
 };
+
+// mount session middleware
 app.use(session(sess));
 
 // The following two lines of code are setting Handlebars.js as the default template engine.

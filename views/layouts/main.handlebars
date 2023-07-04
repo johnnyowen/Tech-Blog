@@ -3,12 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Tech Blog</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    {{{ body }}}
-    {{!-- <button id="test">TEST WORKED</button> --}}
+    <header>
+        <h1>Tech Blog</h1>
+        {{!-- navbar with homepage, dashboard and login/logout links --}}
+        <nav>
+            <a href="/">Homepage</a>
+            <a href="/dashboard/1">Dashboard</a>
+            <a href="/signupLogin">Login/Signup</a>
+            <button id="logout">Logout</button>
+        </nav>
+    </header>
+    <main>
+        {{{ body }}}
+    </main>
+    <footer>
+        <h4>Made with ❤️ by Johnny.</h4>
+    </footer>
 </body>
-<script src="/js/script.js"></script>
+<script src="/js/main.js"></script>
 </html>

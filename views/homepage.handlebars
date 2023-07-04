@@ -1,1 +1,12 @@
-<button id="test">TEST WORKED</button>
+{{!-- Blog posts with title and date created --}}
+
+{{#each serializedPosts as |post|}}
+<div>
+    <p>{{post.title}}</p>
+    <p>{{post.text}}</p>
+    <p>{{post.createdAt}}</p>
+    <p>{{post.commentsCount}}</p>
+</div>
+{{/each}}
+
+<script src="/public/js/homepage.js"></script>
