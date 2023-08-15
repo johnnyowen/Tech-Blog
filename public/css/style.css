@@ -1,4 +1,32 @@
-button {
-    color: tomato;
-    background-color: bisque;
+:root {
+    --montserrat: 'Montserrat', sans-serif;
+    --monoton: 'Monoton', cursive;
+    --caprasimo: 'Caprasimo', cursive;
+    --dark: #110b29;
+    --blue: #1156d6;
+    --lightblue: #8de8ff;
+    --pink: #b13caf;
+    --red: #940430;
+    --orange: #e6615e;
+    --lightpink: #f384ce;
+}
+
+/* main.handlebars */
+body {
+	background-color: var(--dark);
+	color: var(--lightblue);
+	font-family: var(--montserrat);
+}
+
+.wrapper {
+	margin-right: 10vw;
+	margin-left: 5vw;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+footer {
+	/* push footer to the bottom of the page */
+	margin-top: auto;
 }

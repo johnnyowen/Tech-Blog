@@ -1,18 +1,23 @@
+<h1>DASH HOME</h1>
+
 {{!-- all users posts and option to create post --}}
 
-<div>
-    <input type="text" id="blog-title" name="blog-title" placeholder="Blog Title" />
-    <textarea id="blog-desc" name="blog-desc" placeholder="Blog Content"></textarea>
+<form class="newPost">
+    <input type="text" id="postTitle" placeholder="Post Title" />
+    <textarea id="postText" placeholder="Post Content"></textarea>
     <button type="submit">Create</button>
+</form>
+
+<div id="blogPosts">
+    {{#each serializedPosts as |post|}}
+    <div>
+        <a href="./dashboard/post/{{post.id}}">{{post.title}}</a>
+        <p>{{post.text}}</p>
+        <p>{{post.createdAt}}</p>
+        <p>{{post.commentsCount}}</p>
+        <button data-id="{{post.id}}">delete</button>
+    </div>
+    {{/each}}
 </div>
 
-{{#each serializedPosts as |post|}}
-<div>
-    <p>{{post.title}}</p>
-    <p>{{post.text}}</p>
-    <p>{{post.createdAt}}</p>
-    <p>{{post.commentsCount}}</p>
-</div>
-{{/each}}
-
-<script src="/public/js/dashboard.js"></script>
+<script src="/js/dashboard.js"></script>

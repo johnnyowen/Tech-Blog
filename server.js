@@ -20,6 +20,8 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 // import our routes
 const routes = require('./controllers');
+
+// mount static middleware
 app.use(express.static(path.join(__dirname, 'public')));
 
 // configure session object

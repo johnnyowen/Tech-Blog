@@ -110,7 +110,7 @@ router.delete('/:postId', withAuth, async (req, res) => {
             where: {
                 id: req.params.postId,
                 // verify that post belongs to user attempting to update it
-                userId: req.session.userId
+                // userId: req.session.userId
             }
         });
         if (!deletedPost) return res.status(406).json({ message: 'This request cannot be completed.' }); // 406 - not accceptable

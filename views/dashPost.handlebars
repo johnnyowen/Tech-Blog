@@ -1,0 +1,8 @@
+<form class="updatePostForm">
+    <input id="title"  type="text" value="{{post.title}}"/>
+    <textarea id="text" rows="10" cols="75">{{post.text}}</textarea>
+    <input type="hidden" name="post-id" value="{{post.id}}"/>
+    <button type="submit">Update</button>
+</form>
+
+<script src="/js/dashPost.js"></script>
